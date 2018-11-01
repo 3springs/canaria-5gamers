@@ -11,7 +11,7 @@ $ jupyter notebook
 ### Files 
 The notebook `ECG_processing.ipynb` contains python code to clean the csv files from the input Kaggle Dataset and generate the ECG Filtered signal.  It also shows the results of performing wavelet transformations on the data. 
 
-`ecg_processing.q`  this file generates r-peaks from the filtered siginal per gamer.  It then uses the r-peaks to calculate heart rate variability and heart rate per minute per gamer.
+`ecg_process.q`  this file generates r-peaks from the filtered siginal per gamer.  It then uses the r-peaks to calculate heart rate variability and heart rate per minute per gamer.
 
 
 ### Results are uploaded to google drive
