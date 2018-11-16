@@ -13,9 +13,20 @@ process_signal_for_gamer:{
                 where (prev new_peak=1) and (new_peak=1);                                       / select only the rows with a previous possitive new_peak
     gamer:update r_peak : 0 from gamer;                                                         / set the r_peak column to 0             
     gamer: (gamer lj tmp);
-    result:select  TimeD: dev deltas Time%1e10, bpm:count i  by Time.date, Time.minute  from gamer where r_peak=1, new_peak=1;
+
+    annraw:("PS*"; enlist(",")) 0:`$":data/gamer",x,"-annotations.csv";
+    sleep:`Time xasc select Time:Datetime, SleepAssess:"I"$Value from annraw where Event like "Stanford*"; 
+    reaction:`Time xasc select Time:Datetime, Reaction:"I"$Value from annraw where Event like "Sleep*";
+    gamer:aj[`Time;gamer;sleep];
+    gamer:aj[`Time;gamer;reaction];
+    `gamer set gamer;
+    result:update TimeD:0f from (select absmed TimeD, bpm:count i  by Time.date, Time.minute from 
+    update TimeD: deltas Time%1e10 from select from gamer where r_peak=1, new_peak=1) where TimeD >.15;
+    /result:select  TimeD: dev deltas Time%1e10, bpm:count i , last SleepAssess, last Reaction by Time.date, Time.minute  from gamer where r_peak=1, new_peak=1;
     :0!update gamer_num: `$("g",x) from result
  }
+
+absmed:{avg abs x - med x}
 
 // pivot table function 
 piv:{[t;r;c;v;a]
@@ -25,10 +36,25 @@ piv:{[t;r;c;v;a]
 gamers: (uj) over process_signal_for_gamer each "12345" ;                               / process all the gamers 
 
 // HEART RATE VARIABILITY
-select i, g1, g2, g3,g4,g5 from 
+select i, g1, g2,g3, g4,g5 from 
 piv[gamers;`date`minute;`gamer_num;`TimeD;last]
+update TimeD:0f from `gamers where TimeD>=1
 
 // BPM
-update 0^g1, 0^g2, 0^g3, 0^g4, 0^g5 from 
-select i, g1, g2, g3,g4,g5 from 
+update 0^g1, 0^g2,0^g3,0^g4, 0^g5 from 
+select i, g1,g2,g3, g4,g5 from 
 piv[gamers;`date`minute;`gamer_num;`bpm;last]
+
+//SleepAssess
+100 _ update fills g1, fills g2, fills g3,fills g4, fills g5 from 
+select i, g1,g2,g3, g4,g5 from 
+piv[gamers;`date`minute;`gamer_num;`SleepAssess;last]
+
+//Reaction Time
+100 _ update fills g1, fills g2, fills g3,fills g4, fills g5 from 
+select i, g1,g2,g3, g4,g5 from 
+piv[gamers;`date`minute;`gamer_num;`Reaction;last]
+
+//input for FFT processing
+tmp:update pp:ecg_out*1 from (update pp:0f from gamer)  where r_peak=1, new_peak=1 
+save `:data/tmp.csv
