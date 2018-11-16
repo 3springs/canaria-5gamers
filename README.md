@@ -13,6 +13,7 @@ The notebook `ECG_processing.ipynb` contains python code to clean the csv files 
 
 `ecg_process.q`  this file generates r-peaks from the filtered siginal per gamer.  It then uses the r-peaks to calculate heart rate variability and heart rate per minute per gamer.
 
+The notebook `FFT_processing.ipynb` attempts to implement some ideas inspired from this paper. https://www.sciencedirect.com/science/article/pii/S0957417410013916
 
 ### Results are uploaded to google drive
 https://drive.google.com/drive/folders/1ZHy_KlhVLkbyvCtte4T8yrk0vGfRmrqX?usp=sharing
