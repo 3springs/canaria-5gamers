@@ -36,24 +36,16 @@ piv:{[t;r;c;v;a]
 gamers: (uj) over process_signal_for_gamer each "12345" ;                               / process all the gamers 
 
 // HEART RATE VARIABILITY
-select i, g1, g2,g3, g4,g5 from 
-piv[gamers;`date`minute;`gamer_num;`TimeD;last]
-update TimeD:0f from `gamers where TimeD>=1
+// select i, g1, g2,g3, g4,g5 from piv[gamers;`date`minute;`gamer_num;`TimeD;last] update TimeD:0f from `gamers where TimeD>=1
 
 // BPM
-update 0^g1, 0^g2,0^g3,0^g4, 0^g5 from 
-select i, g1,g2,g3, g4,g5 from 
-piv[gamers;`date`minute;`gamer_num;`bpm;last]
+// update 0^g1, 0^g2,0^g3,0^g4, 0^g5 from select i, g1,g2,g3, g4,g5 from piv[gamers;`date`minute;`gamer_num;`bpm;last]
 
 //SleepAssess
-100 _ update fills g1, fills g2, fills g3,fills g4, fills g5 from 
-select i, g1,g2,g3, g4,g5 from 
-piv[gamers;`date`minute;`gamer_num;`SleepAssess;last]
+// 100 _ update fills g1, fills g2, fills g3,fills g4, fills g5 from select i, g1,g2,g3, g4,g5 from piv[gamers;`date`minute;`gamer_num;`SleepAssess;last]
 
 //Reaction Time
-100 _ update fills g1, fills g2, fills g3,fills g4, fills g5 from 
-select i, g1,g2,g3, g4,g5 from 
-piv[gamers;`date`minute;`gamer_num;`Reaction;last]
+//100 _ update fills g1, fills g2, fills g3,fills g4, fills g5 from select i, g1,g2,g3, g4,g5 from piv[gamers;`date`minute;`gamer_num;`Reaction;last]
 
 //input for FFT processing
 tmp:update pp:ecg_out*1 from (update pp:0f from gamer)  where r_peak=1, new_peak=1 
